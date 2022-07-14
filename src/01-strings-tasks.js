@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 /* *******************************************************************************************
  *                                                                                           *
  * Please read the following tutorial before implementing tasks:                              *
@@ -141,8 +142,8 @@ function removeFirstOccurrences(str, value) {
  *   '<span>' => 'span'
  *   '<a>' => 'a'
  */
-function unbracketTag(/* str */) {
-  // return
+function unbracketTag(str) {
+  return str.slice(1, str.length - 1);
 }
 
 
@@ -156,8 +157,8 @@ function unbracketTag(/* str */) {
  *   'Thunderstruck' => 'THUNDERSTRUCK'
  *  'abcdefghijklmnopqrstuvwxyz' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
  */
-function convertToUpperCase(/* str */) {
-  throw new Error('Not implemented');
+function convertToUpperCase(str) {
+  return str.toUpperCase();
 }
 
 /**
@@ -175,8 +176,8 @@ function convertToUpperCase(/* str */) {
  *   ],
  *   'info@gmail.com' => ['info@gmail.com']
  */
-function extractEmails(/* str */) {
-  throw new Error('Not implemented');
+function extractEmails(str) {
+  return str.split(';');
 }
 
 /**
@@ -202,8 +203,25 @@ function extractEmails(/* str */) {
  *             '└──────────┘\n'
  *
  */
-function getRectangleString(/* width, height */) {
-  throw new Error('Not implemented');
+function getRectangleString(width, height) {
+  let rect = '';
+  if (width > 0 && height > 0) {
+    for (let h = 0; h < height; h++) {
+      for (let w = 0; w < width; w++) {
+        if (w === 0 && h === 0) rect += '┌';
+        else if (w > 0 && w < width - 1 && h === 0) rect += '─';
+        else if (w === width - 1 && h === 0) rect += '┐\n';
+        else if (w === 0 && h > 0 && h < height - 1) rect += '│';
+        else if (w > 0 && w < width - 1 && h > 0 && h < height - 1) rect += ' ';
+        else if (w === width - 1 && h > 0 && h < height - 1) rect += '│\n';
+        else if (w === 0 && h === height - 1) rect += '└';
+        else if (w > 0 && w < width - 1 && h === height - 1) rect += '─';
+        else if (w === width - 1 && h === height - 1) rect += '┘\n';
+      }
+    }
+  }
+  return rect;
+  // throw new Error('Not implemented');
 }
 
 
@@ -223,8 +241,19 @@ function getRectangleString(/* width, height */) {
  *    => 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm'
  *
  */
-function encodeToRot13(/* str */) {
-  throw new Error('Not implemented');
+function encodeToRot13(str) {
+  const decodedStr = str.replace(/[A-Z]/g, (match) => {
+    if (match.charCodeAt() >= 78) {
+      return String.fromCharCode(match.charCodeAt() - 13);
+    }
+    return String.fromCharCode(match.charCodeAt() + 13);
+  }).replace(/[a-z]/g, (match) => {
+    if (match.charCodeAt() >= 110) {
+      return String.fromCharCode(match.charCodeAt() - 13);
+    }
+    return String.fromCharCode(match.charCodeAt() + 13);
+  });
+  return decodedStr;
 }
 
 /**
@@ -240,8 +269,9 @@ function encodeToRot13(/* str */) {
  *   isString('test') => true
  *   isString(new String('test')) => true
  */
-function isString(/* value */) {
-  throw new Error('Not implemented');
+function isString(value) {
+  if (value instanceof String) return true;
+  return typeof value === 'string';
 }
 
 
@@ -269,8 +299,13 @@ function isString(/* value */) {
  *   'Q♠' => 50
  *   'K♠' => 51
  */
-function getCardId(/* value */) {
-  throw new Error('Not implemented');
+function getCardId(value) {
+  const cardsArr = ['A♣', '2♣', '3♣', '4♣', '5♣', '6♣', '7♣', '8♣', '9♣', '10♣', 'J♣', 'Q♣', 'K♣',
+    'A♦', '2♦', '3♦', '4♦', '5♦', '6♦', '7♦', '8♦', '9♦', '10♦', 'J♦', 'Q♦', 'K♦',
+    'A♥', '2♥', '3♥', '4♥', '5♥', '6♥', '7♥', '8♥', '9♥', '10♥', 'J♥', 'Q♥', 'K♥',
+    'A♠', '2♠', '3♠', '4♠', '5♠', '6♠', '7♠', '8♠', '9♠', '10♠', 'J♠', 'Q♠', 'K♠'];
+
+  return cardsArr.indexOf(value);
 }
 
 
