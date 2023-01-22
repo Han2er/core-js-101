@@ -116,89 +116,173 @@ function fromJSON(proto, json) {
  *  For more examples see unit tests.
  */
 
+// const cssSelectorBuilder = {
+//   element(/*  */) {
+//     throw new Error('Not implemented');
+//   },
+
+//   id(/* value */) {
+//     throw new Error('Not implemented');
+//   },
+
+//   class(/* value */) {
+//     throw new Error('Not implemented');
+//   },
+
+//   attr(/* value */) {
+//     throw new Error('Not implemented');
+//   },
+
+//   pseudoClass(/* value */) {
+//     throw new Error('Not implemented');
+//   },
+
+//   pseudoElement(/* value */) {
+//     throw new Error('Not implemented');
+//   },
+
+//   combine(/* selector1, combinator, selector2 */) {
+//     throw new Error('Not implemented');
+//   },
+// };
+
+class CssBuilder {
+  constructor() {
+    this.selector = '';
+    this.elementCount = 0;
+    this.idCount = 0;
+    this.pseudoCount = 0;
+    this.order = 0;
+  }
+
+  element(value) {
+    if (this.elementCount > 0) {
+      throw new Error(
+        'Element, id and pseudo-element should not occur more then one time inside the selector',
+      );
+    }
+    this.elementCount += 1;
+    const currentOrder = 1;
+    this.checkOrder(currentOrder);
+    this.order = currentOrder;
+
+    this.selector = value;
+    return this;
+  }
+
+  id(value) {
+    if (this.idCount > 0) {
+      throw new Error(
+        'Element, id and pseudo-element should not occur more then one time inside the selector',
+      );
+    }
+    this.idCount += 1;
+    const currentOrder = 2;
+    this.checkOrder(currentOrder);
+    this.order = currentOrder;
+
+    this.selector += `#${value}`;
+    return this;
+  }
+
+  class(value) {
+    const currentOrder = 3;
+    this.checkOrder(currentOrder);
+    this.order = currentOrder;
+
+    this.selector += `.${value}`;
+    return this;
+  }
+
+  attr(value) {
+    const currentOrder = 4;
+    this.checkOrder(currentOrder);
+    this.order = currentOrder;
+
+    this.selector += `[${value}]`;
+    return this;
+  }
+
+  pseudoClass(value) {
+    const currentOrder = 5;
+    this.checkOrder(currentOrder);
+    this.order = currentOrder;
+
+    this.selector += `:${value}`;
+    return this;
+  }
+
+  pseudoElement(value) {
+    if (this.pseudoCount > 0) {
+      throw new Error(
+        'Element, id and pseudo-element should not occur more then one time inside the selector',
+      );
+    }
+    const currentOrder = 6;
+    this.checkOrder(currentOrder);
+    this.order = currentOrder;
+    this.pseudoCount += 1;
+
+    this.selector += `::${value}`;
+    return this;
+  }
+
+  combine(selector1, combinator, selector2) {
+    this.selector += `${selector1.stringify()} ${combinator} ${selector2.stringify()}`;
+    return this;
+  }
+
+  stringify() {
+    return this.selector;
+  }
+
+  checkOrder(order) {
+    if (order < this.order) {
+      throw new Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element');
+    }
+  }
+}
+
+//
 const cssSelectorBuilder = {
-  element(/*  */) {
-    throw new Error('Not implemented');
+
+  element(val) {
+    const obj = new CssBuilder();
+    return obj.element(val);
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  id(val) {
+    const obj = new CssBuilder();
+    return obj.id(val);
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  class(val) {
+    const obj = new CssBuilder();
+    return obj.class(val);
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  attr(val) {
+    const obj = new CssBuilder();
+    return obj.attr(val);
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(val) {
+    const obj = new CssBuilder();
+    return obj.pseudoClass(val);
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoElement(val) {
+    const obj = new CssBuilder();
+    return obj.pseudoElement(val);
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  combine(selector1, combinator, selector2) {
+    const obj = new CssBuilder();
+    return obj.combine(selector1, combinator, selector2);
   },
 };
 
-// const cssSelectorBuilder = {
-//   cssSelector: '',
-
-//   element(value) {
-//     const obj = Object.create(cssSelectorBuilder);
-//     obj.cssSelector = this.cssSelector + value;
-//     return obj;
-//   },
-
-//   id(value) {
-//     // this.cssSelector += `#${value}`;
-
-//     const obj = Object.create(cssSelectorBuilder);
-//     obj.cssSelector = `${this.cssSelector}#${value}`;
-//     return obj;
-//   },
-
-//   class(value) {
-//     const obj = Object.create(cssSelectorBuilder);
-//     obj.cssSelector = `${this.cssSelector}.${value}`;
-//     return obj;
-//   },
-
-//   attr(value) {
-//     const obj = Object.create(cssSelectorBuilder);
-//     obj.cssSelector = `${this.cssSelector}[${value}]`;
-//     return obj;
-//   },
-
-//   pseudoClass(value) {
-//     const obj = Object.create(cssSelectorBuilder);
-//     obj.cssSelector = `${this.cssSelector}:${value}`;
-//     return obj;
-//   },
-
-//   pseudoElement(value) {
-//     const obj = Object.create(cssSelectorBuilder);
-//     obj.cssSelector = `${this.cssSelector}::${value}`;
-//     return obj;
-//   },
-
-//   combine(selector1, combinator, selector2) {
-//     const obj = Object.create(cssSelectorBuilder);
-//     const a = selector1.stringify();
-//     const b = selector2.stringify();
-//     // console.log(a, b)
-//     obj.cssSelector = `${a} ${combinator} ${b}`;
-//     return obj;
-//   },
-//   stringify() {
-//     return this.cssSelector;
-//   },
-// };
+// ///////////////// //;
 
 
 module.exports = {

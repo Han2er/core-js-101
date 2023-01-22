@@ -221,7 +221,6 @@ function getRectangleString(width, height) {
     }
   }
   return rect;
-  // throw new Error('Not implemented');
 }
 
 
